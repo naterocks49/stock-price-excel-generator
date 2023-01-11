@@ -1,4 +1,8 @@
 import requests
+try:
+    r = requests.get("http://127.0.0.1:5000/grab-data/AAPL/2010-01-10/2015-02-19")
+    r.json()
+except Exception as e:
+    print(e)
 
-r = requests.get("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=IBM&outputsize=full&apikey=G4A2CU9PIX0WRDXH")
-print (r.json()[0])
+print(r.content)
