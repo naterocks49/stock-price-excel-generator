@@ -42,11 +42,20 @@ def stock_generator(ticker, time_start, time_end):
 
 class stockPull():
 
-    def __init__(self, ticker_array, time_frame):
+    def __init__(self, ticker_array, time_start, time_end):
         self.ticker_array = ticker_array
-        self.time_frame = time_frame
-        return "data pull initialized"
+        self.time_start = time_start
+        self.time_end = time_end
+        return None
 
-    def generate_data_set():
+    def generate_data_set(self):
 
-        return
+        self.all_tickers_data = {}
+
+        for ticker in self.ticker_array:
+            one_ticker_data = stock_generator(ticker, self.time_start, self.time_end)
+            self.all_tickers_data[ticker] = one_ticker_data[ticker]
+
+
+        return self.all_tickers_data
+
