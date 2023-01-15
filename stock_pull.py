@@ -1,11 +1,11 @@
 import requests
-
+import time
 # time_frame must be 
-def stock_generator(ticker, time_start, time_end):
+def stock_generator(ticker, time_start, time_end, api_key):
 
     date_price_dict = {}
 
-    new_request = requests.get(f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={ticker}&outputsize=full&apikey=G4A2CU9PIX0WRDXH")
+    new_request = requests.get(f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={ticker}&outputsize=full&apikey={api_key}")
     new_request = new_request.json()
     new_request = new_request["Time Series (Daily)"]
     clean_request = {}
@@ -46,15 +46,32 @@ class stockPull():
         self.ticker_array = ticker_array
         self.time_start = time_start
         self.time_end = time_end
+        self.api_keys = ["32FQZDW0NBL5E5XO","CJYLF7BOPNL4D8T5"]
         return None
 
     def generate_data_set(self):
 
         self.all_tickers_data = {}
-
+        i = 0
+        count = 0
         for ticker in self.ticker_array:
-            one_ticker_data = stock_generator(ticker, self.time_start, self.time_end)
+            print(i)
+            try:
+                time.sleep(12)
+                one_ticker_data = stock_generator(ticker, self.time_start, self.time_end, self.api_keys[i])
+
+            except Exception as e:
+                print(e)
             self.all_tickers_data[ticker] = one_ticker_data[ticker]
+
+            count+=1
+            if count == (len(self.api_keys*5)) or count == len(self.ticker_array):
+                return self.all_tickers_data
+            if i == (len(self.api_keys) - 1):
+                i = 0
+            else:
+                i += 1
+            
 
 
         return self.all_tickers_data

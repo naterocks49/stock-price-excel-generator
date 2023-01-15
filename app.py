@@ -15,7 +15,10 @@ def grab_data(tickers, startdate, enddate, datatype):
     tickers_array = tickers.split(",")
 
     new_request = stockPull(tickers_array, startdate, enddate)
-    new_request = new_request.generate_data_set()
+    try:
+        new_request = new_request.generate_data_set()
+    except Exception as e:
+        return "ERROR"  
 
     if datatype == "JSON":
         return new_request
@@ -38,5 +41,6 @@ def startAPI():
     if __name__ == "__main__":
         app.run()
 
+  
 
 startAPI()
