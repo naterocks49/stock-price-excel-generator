@@ -1,7 +1,7 @@
 from flask import Flask, make_response
-from stock_pull import stockPull, stock_generator
+from stock_pull import stockPull
 from formulas import JSON_to_EXCEL
-import pandas as pd
+import re
 
 app = Flask(__name__)
 
@@ -12,7 +12,7 @@ def hello_world():
 @app.route("/grab-data/<tickers>/<startdate>/<enddate>/<datatype>", methods=['GET'])
 def grab_data(tickers, startdate, enddate, datatype):
 
-    tickers_array = tickers.split(",")
+    tickers_array = re.findall(r'[A-Z]+', tickers)
 
     new_request = stockPull(tickers_array, startdate, enddate)
     try:
@@ -25,15 +25,20 @@ def grab_data(tickers, startdate, enddate, datatype):
     elif datatype == "CSV":
         xlsm_request = JSON_to_EXCEL(new_request)
 
-        with open('data.xlsx', 'rb') as f:
+        with open('/home/ubuntu/helloworld/data.xlsx', 'rb') as f:
             file_bytes = f.read()
 
         response = make_response(file_bytes)
         response.headers.set('Content-Type', 'application/vnd.ms-excel.sheet.macroEnabled.12')
-        response.headers.set('Content-Disposition', 'attachment', filename='data.xlsx')
+        response.headers.set('Content-Disposition', 'attachment', filename='/home/ubuntu/helloworld/data.xlsx')
 
         return response
-        
+
+@app.route("/grab-master", methods=['GET'])
+def grab_master():
+
+    return
+
 
 
 

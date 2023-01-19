@@ -1,6 +1,6 @@
 import requests
 import time
-# time_frame must be 
+
 def stock_generator(ticker, time_start, time_end, api_key):
 
     date_price_dict = {}
@@ -12,13 +12,13 @@ def stock_generator(ticker, time_start, time_end, api_key):
 
     for date in new_request:
         clean_request[date.replace("-", "")] = new_request[date]
-    
+
 
     date_check = []
 
     for date in new_request:
         date_check.append(date.replace("-", ""))
-        
+
     new_date_range = []
 
     for date in date_check:
@@ -52,27 +52,24 @@ class stockPull():
     def generate_data_set(self):
 
         self.all_tickers_data = {}
-        i = 0
         count = 0
         for ticker in self.ticker_array:
-            print(i)
+            print(count)
+
+
             try:
-                time.sleep(12)
-                one_ticker_data = stock_generator(ticker, self.time_start, self.time_end, self.api_keys[i])
+                one_ticker_data = stock_generator(ticker, self.time_start, self.time_end, self.api_keys[0])
 
             except Exception as e:
                 print(e)
             self.all_tickers_data[ticker] = one_ticker_data[ticker]
 
             count+=1
-            if count == (len(self.api_keys*5)) or count == len(self.ticker_array):
+            if count == len(self.ticker_array):
                 return self.all_tickers_data
-            if i == (len(self.api_keys) - 1):
-                i = 0
-            else:
-                i += 1
-            
-
 
         return self.all_tickers_data
+
+
+
 
